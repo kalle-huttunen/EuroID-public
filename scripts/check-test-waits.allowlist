@@ -1,0 +1,32 @@
+# Sleeps and waits over 5 s that were in the tests when scripts/check-test-waits.sh came
+# (2026-11-25): "<sleep|wait> <count> <path>". The guard fails when a test file has more than its
+# entry allows; a file without an entry allows none. Reduce this list, do not grow it: lower or
+# remove an entry when its file needs fewer (the guard prints a note).
+sleep 1 backend/src/infrastructure/events/handlers/event-redelivery.integration.spec.ts
+sleep 1 backend/src/modules/access-explorer/access-explorer.neo4j.integration.spec.ts
+sleep 1 backend/src/modules/audit/audit-chain.integration.spec.ts
+sleep 1 backend/src/modules/auth/admin-users.integration.spec.ts
+sleep 1 backend/src/modules/connectors/json-api-hr-connector/json-api-hr.client.probe.spec.ts
+sleep 1 backend/src/modules/dead-letter/dead-letter-claims.integration.spec.ts
+sleep 2 backend/src/modules/event-subscriptions/webhook-dlq-retry.integration.spec.ts
+sleep 1 backend/src/modules/event-subscriptions/webhook-retry-poller.integration.spec.ts
+sleep 1 backend/src/modules/joiners/joiner-detection.integration.spec.ts
+sleep 1 backend/src/modules/leavers/leaver-detection.integration.spec.ts
+sleep 1 backend/src/modules/mover/hr-mover-detection.integration.spec.ts
+sleep 1 backend/test/workflows/access-request-approval.workflow.e2e-spec.ts
+sleep 1 backend/test/workflows/access-request-delegate-end-date.workflow.e2e-spec.ts
+sleep 1 backend/test/workflows/access-request-sod-recheck.workflow.e2e-spec.ts
+sleep 1 backend/test/workflows/access-review-revocation.workflow.e2e-spec.ts
+sleep 2 backend/test/workflows/hr-leaver.workflow.e2e-spec.ts
+sleep 2 backend/test/workflows/hr-mover.workflow.e2e-spec.ts
+sleep 2 backend/test/workflows/jml-end-to-end.workflow.e2e-spec.ts
+sleep 1 backend/test/workflows/offboarding-per-system.workflow.e2e-spec.ts
+sleep 1 backend/test/workflows/onboarding-sod-block.workflow.e2e-spec.ts
+sleep 1 backend/test/workflows/reconciliation-orphan-cleanup-start.workflow.e2e-spec.ts
+sleep 1 frontend/src/auth/__tests__/LocalAuthProvider.saml-callback.test.tsx
+wait 1 frontend/src/features/access-explorer/__tests__/AccessExplorerPage.test.tsx
+sleep 2 frontend/src/features/access-requests/__tests__/RequestForm.test.tsx
+sleep 1 frontend/src/features/users/components/__tests__/ReviewExclusionsPanel.test.tsx
+wait 1 frontend/src/features/users/components/__tests__/UserProfileTab.mastery.test.tsx
+sleep 1 frontend/src/features/users/__tests__/IdentityDetailPage.test.tsx
+wait 1 frontend/src/__tests__/App.local-auth.test.tsx

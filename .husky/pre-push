@@ -1,0 +1,5 @@
+# The test gate (no CI): the backend type-check (jest compiles without type-checking), the backend
+# unit and integration tests, then the Temporal workflow e2e suite with the joiner, mover, leaver
+# story (backend/docs/TESTING.md). Any of them failing refuses the push. The first e2e run
+# downloads Temporal's test server (backend/docs/TESTING.md).
+cd backend && npm run typecheck && npm test && TEMPORAL_E2E=1 npm run test:e2e

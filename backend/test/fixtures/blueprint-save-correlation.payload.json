@@ -1,0 +1,106 @@
+{
+  "nodes": [
+    {
+      "id": "csv-hr-source",
+      "type": "connectorNode",
+      "position": {
+        "x": 50,
+        "y": 250
+      },
+      "data": {
+        "label": "CSV HR",
+        "role": "source",
+        "type": "csv-hr",
+        "config": {
+          "filePath": "/data/hr.csv"
+        }
+      }
+    },
+    {
+      "id": "euroid-core",
+      "type": "connectorNode",
+      "position": {
+        "x": 350,
+        "y": 250
+      },
+      "data": {
+        "label": "EuroID Brain",
+        "role": "brain"
+      }
+    },
+    {
+      "id": "okta-target-1",
+      "type": "connectorNode",
+      "position": {
+        "x": 700,
+        "y": 250
+      },
+      "data": {
+        "label": "Okta",
+        "role": "target",
+        "type": "okta",
+        "config": {
+          "orgUrl": "https://dev.okta.example",
+          "apiToken": "••••••••"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1-core",
+      "source": "csv-hr-source",
+      "target": "euroid-core",
+      "label": "HR Feed"
+    },
+    {
+      "id": "core-okta",
+      "source": "euroid-core",
+      "target": "okta-target-1",
+      "label": "Identity"
+    }
+  ],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  },
+  "connectorConfigs": {
+    "okta": {
+      "orgUrl": "https://dev.okta.example",
+      "apiToken": "••••••••"
+    },
+    "euroid-core": {
+      "correlationConfig": {
+        "rules": [
+          {
+            "strategy": "employeeNumber"
+          },
+          {
+            "strategy": "hashedNationalId",
+            "nationalIdSourceField": "hetu"
+          },
+          {
+            "strategy": "composite",
+            "compositeFields": ["firstName", "lastName", "birthDate"]
+          },
+          {
+            "strategy": "heuristicName",
+            "nameMatchThreshold": 0.85,
+            "nameMatchMode": "fuzzy"
+          },
+          {
+            "strategy": "email"
+          }
+        ],
+        "conflictAction": "auto-link",
+        "fieldMasteryOverrides": {
+          "email": ["okta"],
+          "jobTitle": ["csv-hr"]
+        },
+        "hrWriteback": true,
+        "targetWriteback": false
+      }
+    }
+  }
+}

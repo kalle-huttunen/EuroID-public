@@ -1,0 +1,56 @@
+version: 2
+updates:
+  # Backend dependencies
+  - package-ecosystem: npm
+    directory: /backend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - backend
+    groups:
+      nest:
+        patterns:
+          - "@nestjs/*"
+      temporal:
+        patterns:
+          - "@temporalio/*"
+      testing:
+        patterns:
+          - "jest*"
+          - "@types/jest"
+          - "ts-jest"
+
+  # Frontend dependencies
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - frontend
+    groups:
+      react:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      antd:
+        patterns:
+          - "antd"
+          - "@ant-design/*"
+      tanstack:
+        patterns:
+          - "@tanstack/*"
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - ci

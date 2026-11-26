@@ -1,0 +1,21 @@
+EmpID,First Name,Last Name,Email,Job Title,Department,Employment Type,Phone,Location,Start Date
+E001,Matti,Virtanen,matti.virtanen@example.com,Senior Developer,Engineering,Full Time,+358-50-1234567,Helsinki,2022-01-15
+E002,Liisa,Korhonen,liisa.korhonen@example.com,HR Director,Human Resources,Full Time,+358-50-2345678,Helsinki,2020-06-01
+E003,Antti,Mäkinen,antti.makinen@example.com,Product Manager,Product,Full Time,+358-50-3456789,Tampere,2021-03-20
+E004,Sanna,Nieminen,sanna.nieminen@example.com,Finance Lead,Finance,Full Time,+358-50-4567890,Helsinki,2019-09-10
+E005,Mikko,Hämäläinen,mikko.hamalainen@example.com,DevOps Engineer,Engineering,Full Time,+358-50-5678901,Oulu,2023-02-01
+E006,Johanna,Laine,johanna.laine@example.com,UX Designer,Design,Full Time,+358-50-6789012,Helsinki,2021-08-15
+E007,Petri,Koskinen,petri.koskinen@example.com,Backend Developer,Engineering,Full Time,+358-50-7890123,Tampere,2022-05-20
+E008,Minna,Järvinen,minna.jarvinen@example.com,QA Lead,Engineering,Full Time,+358-50-8901234,Helsinki,2020-11-01
+E009,Jari,Lehtonen,jari.lehtonen@example.com,Sales Director,Sales,Full Time,+358-50-9012345,Helsinki,2018-04-15
+E010,Kaisa,Heikkinen,kaisa.heikkinen@example.com,Marketing Manager,Marketing,Full Time,+358-50-0123456,Turku,2022-07-01
+E011,Timo,Aalto,timo.aalto@example.com,IT Director,Tietohallinto,Full Time,+358-50-1112233,Helsinki,2017-01-10
+E012,Riikka,Tuominen,riikka.tuominen@example.com,IT Analyst,Tietohallinto,Full Time,+358-50-2223344,Helsinki,2023-01-15
+E013,Ville,Saarinen,ville.saarinen@example.com,Security Engineer,Security,Full Time,+358-50-3334455,Tampere,2021-06-01
+E014,Elina,Lahtinen,elina.lahtinen@example.com,Compliance Officer,Legal,Full Time,+358-50-4445566,Helsinki,2020-02-20
+E015,Markus,Rantanen,markus.rantanen@example.com,Frontend Developer,Engineering,Full Time,+358-50-5556677,Oulu,2022-09-01
+E016,Hanna,Karjalainen,hanna.karjalainen@example.com,IT Service Manager,Tietohallinto,Full Time,+358-50-6667788,Helsinki,2019-05-15
+E017,Pekka,Jokinen,pekka.jokinen@example.com,Systems Architect,Tietohallinto,Full Time,+358-50-7778899,Tampere,2021-01-10
+E018,Tiina,Ahonen,tiina.ahonen@example.com,IT Support Coordinator,Tietohallinto,Full Time,+358-50-8889900,Helsinki,2022-03-01
+E019,Carl,Lindström,carl.lindstrom@example.com,Contractor Manager,Operations,Contractor,+358-50-9990011,Helsinki,2023-06-01
+E020,Laura,Salonen,laura.salonen@example.com,Project Manager,Engineering,Full Time,+358-50-1011121,Turku,2021-11-15

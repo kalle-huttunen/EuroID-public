@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+dist/
+build/
+.pnpm-store/
+
+# Environment variables (Secrets)
+.env
+.env.local
+.env.production
+.env.*.local
+backend/.env
+frontend/.env
+.DS_Store
+
+# Docker/Database Data
+mongo-data/
+postgres-data/
+temporal-data/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE settings
+.vscode/
+.idea/
+
+# Coverage reports
+backend/coverage/
+frontend/coverage/
+
+# Generated OPA policy files (runtime artifacts)
+backend/policies/
+
+# Runtime output
+*.jsonl
+
+# Temp
+tmp-codeguard/

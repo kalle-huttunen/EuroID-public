@@ -1,0 +1,26 @@
+# EuroID Code Ownership
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @euroid/core-team
+
+# Backend modules (Pillar owners)
+backend/src/modules/identity/       @euroid/core-team
+backend/src/modules/policy/         @euroid/core-team
+backend/src/modules/connectors/     @euroid/core-team
+backend/src/modules/reconciliation/ @euroid/core-team
+backend/src/modules/blueprints/     @euroid/core-team
+backend/src/workflows/              @euroid/core-team
+
+# Infrastructure & Security
+backend/src/infrastructure/secrets/ @euroid/core-team
+backend/src/infrastructure/auth/    @euroid/core-team
+.github/workflows/                  @euroid/core-team
+docker-compose.yml                  @euroid/core-team
+backend/Dockerfile*                 @euroid/core-team
+
+# Frontend
+frontend/src/                       @euroid/core-team
+
+# Documentation & governance
+docs/architecture/                  @euroid/core-team

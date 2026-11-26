@@ -1,0 +1,208 @@
+# SETUP: Copy .env.example to .env and fill in secrets before running.
+#   cp .env.example .env
+#   # Edit .env — set MONGO_PASSWORD, TEMPORAL_DB_PASSWORD, ENCRYPTION_KEY
+#   docker compose up -d
+
+services:
+  # --- 1. DATABASE (MongoDB) ---
+  euro-mongo:
+    image: mongo:latest
+    container_name: euroid-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: euroid-mongo-ui
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@euro-mongo:27017/
+    depends_on:
+      - euro-mongo
+
+  # --- 2. THE BRAIN (Temporal) ---
+  temporal:
+    image: temporalio/auto-setup:latest
+    container_name: euroid-temporal
+    ports:
+      - "7233:7233" # The GRPC Port (Worker connects here)
+      - "8233:8233" # The UI Port
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=${TEMPORAL_DB_USER}
+      - POSTGRES_PWD=${TEMPORAL_DB_PASSWORD}
+      - POSTGRES_SEEDS=temporal-db
+      # The namespace auto-setup creates; the API, the worker and temporal-init use the same one
+      - DEFAULT_NAMESPACE=${TEMPORAL_NAMESPACE:-default}
+      # Adds Temporal's own Custom*Field test attributes only. The image reads no variable that
+      # registers other attributes: temporal-init (below) registers TenantId.
+      - SKIP_ADD_CUSTOM_SEARCH_ATTRIBUTES=false
+    depends_on:
+      - temporal-db
+
+  # Registers the custom search attribute TenantId (Keyword), which every tenant workflow is
+  # started with; Temporal refuses those starts without it (docs/DEPLOYMENT.md § 4. Temporal).
+  # Retries until Temporal and the namespace answer, does nothing when TenantId is already
+  # registered, and exits 0. euro-api and euro-worker wait for it to complete.
+  temporal-init:
+    image: temporalio/admin-tools:1.29.7-tctl-1.18.4-cli-1.7.2
+    container_name: euroid-temporal-init
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE:-default}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        registered() {
+          temporal operator search-attribute list --address "$$TEMPORAL_ADDRESS" \
+            --namespace "$$TEMPORAL_NAMESPACE" 2>/dev/null | grep -qw TenantId
+        }
+        tries=0
+        until registered; do
+          tries=$$((tries + 1))
+          if [ "$$tries" -gt 90 ]; then
+            echo "TenantId not registered: $$TEMPORAL_NAMESPACE at $$TEMPORAL_ADDRESS did not answer" >&2
+            exit 1
+          fi
+          temporal operator search-attribute create --address "$$TEMPORAL_ADDRESS" \
+            --namespace "$$TEMPORAL_NAMESPACE" --name TenantId --type Keyword >/dev/null 2>&1 \
+            || sleep 2
+        done
+        echo "TenantId is registered in namespace $$TEMPORAL_NAMESPACE"
+    restart: "no"
+    depends_on:
+      - temporal
+
+  temporal-db:
+    image: postgres:13
+    container_name: euroid-temporal-db
+    environment:
+      - POSTGRES_USER=${TEMPORAL_DB_USER}
+      - POSTGRES_PASSWORD=${TEMPORAL_DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  temporal-ui:
+    image: temporalio/ui:latest
+    container_name: euroid-temporal-ui
+    ports:
+      - "8080:8080" # Access the UI at http://localhost:8080
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    depends_on:
+      - temporal
+
+  # --- 3. APPLICATION ---
+  euro-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: euroid-api
+    restart: unless-stopped
+    ports:
+      - "3002:3001"
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@euro-mongo:27017/euroid?authSource=admin
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE:-default}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      # National ID correlation; migration 20261125000000 needs it while a tenant has the rule
+      - CORRELATION_HMAC_SECRET=${CORRELATION_HMAC_SECRET:-}
+      - AUTH_DISABLED=${AUTH_DISABLED:-true}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173,http://localhost}
+      - OTEL_SDK_DISABLED=${OTEL_SDK_DISABLED:-true}
+      # Access graph (optional, profile graph below): with NEO4J_PASSWORD empty, the default, the
+      # access explorer answers 503 "Neo4j is not configured"
+      - NEO4J_URL=${NEO4J_URL:-bolt://euro-neo4j:7687}
+      - NEO4J_USER=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-}
+    depends_on:
+      euro-mongo:
+        condition: service_started
+      temporal:
+        condition: service_started
+      temporal-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  euro-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    container_name: euroid-worker
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@euro-mongo:27017/euroid?authSource=admin
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE:-default}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      # The same value as the API's (national ID correlation in HR syncs and onboarding)
+      - CORRELATION_HMAC_SECRET=${CORRELATION_HMAC_SECRET:-}
+      - AUTH_DISABLED=${AUTH_DISABLED:-true}
+      - OTEL_SDK_DISABLED=${OTEL_SDK_DISABLED:-true}
+      # The worker's provisioning events update the access graph too (GraphSyncService)
+      - NEO4J_URL=${NEO4J_URL:-bolt://euro-neo4j:7687}
+      - NEO4J_USER=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-}
+    depends_on:
+      euro-mongo:
+        condition: service_started
+      temporal:
+        condition: service_started
+      temporal-init:
+        condition: service_completed_successfully
+
+  euro-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: euroid-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      euro-api:
+        condition: service_healthy
+
+  # --- 4. OPTIONAL: ACCESS GRAPH (Neo4j) ---
+  # Only with the profile: docker compose --profile graph up -d euro-neo4j
+  # Set NEO4J_PASSWORD (8 characters or more) in .env first; the API and the worker use the same
+  # value. Then load the graph: POST /api/v1/access-explorer/resync (super-admin), or
+  # [Load graph from MongoDB] on the Access explorer page. docs/GETTING_STARTED.md
+  euro-neo4j:
+    image: neo4j:5
+    container_name: euroid-neo4j
+    profiles: ["graph"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7474:7474" # Neo4j Browser
+      - "127.0.0.1:7687:7687" # Bolt (the API and the worker connect here)
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-}
+      NEO4J_server_memory_heap_max__size: ${NEO4J_HEAP_MAX_SIZE:-512m}
+    volumes:
+      - neo4j_data:/data
+
+volumes:
+  mongo_data:
+  postgres_data:
+  neo4j_data:

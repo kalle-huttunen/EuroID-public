@@ -1,0 +1,3 @@
+# openapi-typescript output (npm run generate:api). scripts/check-api-types-drift.sh compares it
+# byte for byte with a fresh generation, so a formatter must not rewrite it.
+frontend/src/generated/

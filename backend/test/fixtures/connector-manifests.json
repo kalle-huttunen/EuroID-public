@@ -1,0 +1,419 @@
+{
+  "connectors": [
+    {
+      "id": "entra-id",
+      "icon": "WindowsOutlined",
+      "capabilities": [
+        "discover",
+        "provision",
+        "deprovision",
+        "healthCheck",
+        "reconciliation",
+        "credentialManagement"
+      ],
+      "configSchema": [
+        {
+          "key": "tenantId",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "clientId",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "clientSecret",
+          "type": "password",
+          "required": true
+        },
+        {
+          "key": "defaultDomain",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "defaultLicense",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "usageLocation",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "syncIntervalHours",
+          "type": "select",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "scim",
+      "icon": "ApiOutlined",
+      "capabilities": [
+        "discover",
+        "provision",
+        "deprovision",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "baseUrl",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "authType",
+          "type": "select",
+          "required": true
+        },
+        {
+          "key": "bearerToken",
+          "type": "password",
+          "required": false
+        },
+        {
+          "key": "username",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "password",
+          "type": "password",
+          "required": false
+        },
+        {
+          "key": "oauth2TokenUrl",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "clientId",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "clientSecret",
+          "type": "password",
+          "required": false
+        },
+        {
+          "key": "deprovisionStrategy",
+          "type": "select",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "csv-hr",
+      "icon": "FileTextOutlined",
+      "capabilities": [
+        "ingest",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "filePath",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "sourceSystem",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "columnMap",
+          "type": "json",
+          "required": false
+        },
+        {
+          "key": "syncIntervalHours",
+          "type": "select",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "json-api-hr",
+      "icon": "ApiOutlined",
+      "capabilities": [
+        "ingest",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "url",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "authType",
+          "type": "select",
+          "required": false
+        },
+        {
+          "key": "bearerToken",
+          "type": "password",
+          "required": false
+        },
+        {
+          "key": "authHeaderName",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "authHeaderSecret",
+          "type": "password",
+          "required": false
+        },
+        {
+          "key": "responsePath",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "sourceSystem",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "fieldMap",
+          "type": "json",
+          "required": false
+        },
+        {
+          "key": "syncIntervalHours",
+          "type": "select",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "file-outbound",
+      "icon": "FileTextOutlined",
+      "capabilities": [
+        "provision",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "outputFilePath",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "discord-webhook",
+      "icon": "MessageOutlined",
+      "capabilities": [
+        "provision",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "webhookUrl",
+          "type": "password",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "github",
+      "icon": "GithubOutlined",
+      "capabilities": [
+        "provision",
+        "deprovision",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "personalAccessToken",
+          "type": "password",
+          "required": true
+        },
+        {
+          "key": "orgName",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "google-sheets",
+      "icon": "TableOutlined",
+      "capabilities": [
+        "provision",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "sheetId",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "serviceAccountJson",
+          "type": "password",
+          "required": true
+        },
+        {
+          "key": "sheetName",
+          "type": "text",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "ad",
+      "icon": "ApartmentOutlined",
+      "capabilities": [
+        "discover",
+        "provision",
+        "deprovision",
+        "healthCheck",
+        "reconciliation",
+        "credentialManagement"
+      ],
+      "configSchema": [
+        {
+          "key": "host",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "port",
+          "type": "number",
+          "required": false
+        },
+        {
+          "key": "useLdaps",
+          "type": "select",
+          "required": false
+        },
+        {
+          "key": "serviceAccount",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "password",
+          "type": "password",
+          "required": true
+        },
+        {
+          "key": "rootBaseDn",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "userSearchBase",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "userOu",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "defaultDomain",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "syncIntervalHours",
+          "type": "select",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "okta",
+      "icon": "CloudOutlined",
+      "capabilities": [
+        "discover",
+        "provision",
+        "deprovision",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "orgUrl",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "apiToken",
+          "type": "password",
+          "required": true
+        },
+        {
+          "key": "defaultGroupId",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "deprovisionStrategy",
+          "type": "select",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "servicenow",
+      "icon": "ToolOutlined",
+      "capabilities": [
+        "provision",
+        "deprovision",
+        "discover",
+        "healthCheck"
+      ],
+      "configSchema": [
+        {
+          "key": "instanceUrl",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "clientId",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "clientSecret",
+          "type": "password",
+          "required": true
+        },
+        {
+          "key": "username",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "password",
+          "type": "password",
+          "required": false
+        },
+        {
+          "key": "defaultAssignmentGroup",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "incidentCategory",
+          "type": "text",
+          "required": false
+        },
+        {
+          "key": "incidentPriority",
+          "type": "select",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

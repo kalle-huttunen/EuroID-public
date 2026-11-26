@@ -1,0 +1,93 @@
+import { ConnectorManifest } from '../plugin/connector-manifest.interface';
+import { ServiceNowConnectorModule } from './servicenow.module';
+import { ServiceNowService } from './servicenow.service';
+
+export const serviceNowManifest: ConnectorManifest = {
+  id: 'servicenow',
+  name: 'ServiceNow',
+  version: '1.0.0',
+  description:
+    'Ticket integration: creates incidents/change requests for provisioning events and syncs user records to ServiceNow.',
+  icon: 'ToolOutlined',
+  capabilities: ['provision', 'deprovision', 'discover', 'healthCheck'],
+  configSchema: [
+    {
+      key: 'instanceUrl',
+      label: 'Instance URL',
+      type: 'text',
+      required: true,
+      placeholder: 'https://mycompany.service-now.com',
+      description: 'ServiceNow instance URL (e.g., https://mycompany.service-now.com)',
+      tab: 'Connection',
+    },
+    {
+      key: 'clientId',
+      label: 'OAuth2 Client ID',
+      type: 'text',
+      required: true,
+      placeholder: 'abc123...',
+      description: 'OAuth2 client ID from ServiceNow Application Registry',
+      tab: 'Connection',
+    },
+    {
+      key: 'clientSecret',
+      label: 'OAuth2 Client Secret',
+      type: 'password',
+      required: true,
+      description: 'OAuth2 client secret',
+      tab: 'Connection',
+    },
+    {
+      key: 'username',
+      label: 'Username (Basic Auth Fallback)',
+      type: 'text',
+      required: false,
+      placeholder: 'admin',
+      description: 'Username for Basic auth fallback if OAuth2 is unavailable',
+      tab: 'Connection',
+    },
+    {
+      key: 'password',
+      label: 'Password (Basic Auth Fallback)',
+      type: 'password',
+      required: false,
+      description: 'Password for Basic auth fallback',
+      tab: 'Connection',
+    },
+    {
+      key: 'defaultAssignmentGroup',
+      label: 'Default Assignment Group',
+      type: 'text',
+      required: false,
+      placeholder: 'sys_id of the assignment group',
+      description: 'sys_id of the default assignment group for incidents',
+      tab: 'Incidents',
+    },
+    {
+      key: 'incidentCategory',
+      label: 'Incident Category',
+      type: 'text',
+      required: false,
+      placeholder: 'Software',
+      description: 'Default category for created incidents',
+      tab: 'Incidents',
+    },
+    {
+      key: 'incidentPriority',
+      label: 'Incident Priority',
+      type: 'select',
+      required: false,
+      description: 'Default priority for created incidents',
+      defaultValue: '3',
+      options: [
+        { label: '1 - Critical', value: '1' },
+        { label: '2 - High', value: '2' },
+        { label: '3 - Moderate', value: '3' },
+        { label: '4 - Low', value: '4' },
+      ],
+      tab: 'Incidents',
+    },
+  ],
+  module: ServiceNowConnectorModule,
+  serviceClass: ServiceNowService,
+};

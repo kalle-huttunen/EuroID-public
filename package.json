@@ -1,0 +1,41 @@
+{
+  "name": "euro-id-monorepo",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare": "bash scripts/setup-git-hooks.sh",
+    "dev:backend": "cd backend && npm run start:dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "temporal": "temporal server start-dev --search-attribute TenantId=Keyword",
+    "test:load:smoke": "k6 run tests/load/k6-smoke.js",
+    "test:load:soak": "k6 run tests/load/k6-soak.js",
+    "test:load:stress": "k6 run tests/load/k6-stress.js"
+  },
+  "lint-staged": {
+    "backend/src/**/*.ts": [
+      "prettier --write",
+      "node backend/node_modules/eslint/bin/eslint.js --config backend/eslint.config.mjs --fix --no-warn-ignored",
+      "bash -c 'cd backend && npx jest --bail --findRelatedTests --passWithNoTests -- \"$@\"' --",
+      "bash -c 'bash scripts/check-tenant-guard.sh'",
+      "bash -c 'bash scripts/check-request-tenant-fields.sh'",
+      "bash -c 'bash scripts/check-workflow-tenant-reads.sh'"
+    ],
+    "frontend/src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "node frontend/node_modules/eslint/bin/eslint.js --config frontend/eslint.config.js --fix --no-warn-ignored",
+      "bash -c 'bash scripts/check-hex-colors.sh'"
+    ],
+    "swagger-spec.json": [
+      "bash -c 'bash scripts/check-api-types-drift.sh'"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.3"
+  },
+  "private": true
+}

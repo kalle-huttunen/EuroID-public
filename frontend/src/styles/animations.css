@@ -1,0 +1,130 @@
+/**
+ * EuroID — Global animations & transitions
+ *
+ * Finnish design: subtle, confident, no bouncing or swooping.
+ * Motion only where it aids comprehension or signals state change.
+ */
+
+/* ── Page entry animation ──────────────────────────────────────── */
+.page-enter {
+  animation: pageEnter 0.2s ease-out both;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Skeleton → content crossfade ──────────────────────────────── */
+.content-appear {
+  animation: contentAppear 0.25s ease-out both;
+}
+
+@keyframes contentAppear {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Card hover lift (opt-in via class) ────────────────────────── */
+.card-hover-lift {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Floating bar slide-up ─────────────────────────────────────── */
+.bulk-bar-enter {
+  animation: bulkBarEnter 0.2s ease-out both;
+}
+
+@keyframes bulkBarEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Notification tray slide ───────────────────────────────────── */
+.notification-tray-enter {
+  animation: trayEnter 0.15s ease-out both;
+}
+
+@keyframes trayEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Command palette backdrop ──────────────────────────────────── */
+.cmdk-overlay {
+  animation: overlayFadeIn 0.12s ease-out both;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cmdk-dialog {
+  animation: cmdk-dialog-enter 0.15s ease-out both;
+}
+
+@keyframes cmdk-dialog-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ── Breadcrumb fade ───────────────────────────────────────────── */
+.breadcrumb-bar {
+  animation: breadcrumbFade 0.2s ease-out both;
+}
+
+@keyframes breadcrumbFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Reduce motion for accessibility ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .content-appear,
+  .bulk-bar-enter,
+  .notification-tray-enter,
+  .cmdk-overlay,
+  .cmdk-dialog,
+  .breadcrumb-bar {
+    animation: none;
+  }
+
+  .card-hover-lift {
+    transition: none;
+  }
+
+  .card-hover-lift:hover {
+    transform: none;
+  }
+}

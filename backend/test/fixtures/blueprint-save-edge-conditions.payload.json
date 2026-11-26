@@ -1,0 +1,168 @@
+{
+  "nodes": [
+    {
+      "id": "csv-hr-source",
+      "type": "connectorNode",
+      "position": {
+        "x": 50,
+        "y": 250
+      },
+      "style": {
+        "width": 180,
+        "borderRadius": 8
+      },
+      "data": {
+        "label": "CSV HR",
+        "role": "source",
+        "type": "csv-hr"
+      }
+    },
+    {
+      "id": "euroid-core",
+      "type": "connectorNode",
+      "position": {
+        "x": 350,
+        "y": 250
+      },
+      "style": {
+        "width": 190,
+        "borderRadius": 12,
+        "height": 60,
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "data": {
+        "label": "EuroID Brain",
+        "role": "brain"
+      }
+    },
+    {
+      "id": "okta-target-1",
+      "type": "connectorNode",
+      "position": {
+        "x": 700,
+        "y": 150
+      },
+      "style": {
+        "width": 180,
+        "borderRadius": 8
+      },
+      "data": {
+        "label": "Okta",
+        "role": "target",
+        "type": "okta"
+      }
+    },
+    {
+      "id": "entra-target",
+      "type": "connectorNode",
+      "position": {
+        "x": 700,
+        "y": 350
+      },
+      "style": {
+        "width": 180,
+        "borderRadius": 8
+      },
+      "data": {
+        "label": "Microsoft Entra ID",
+        "role": "target",
+        "type": "entra-id"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1-core",
+      "source": "csv-hr-source",
+      "target": "euroid-core",
+      "style": {
+        "stroke": "#8A94A3",
+        "strokeWidth": 1.5
+      },
+      "label": "HR Feed"
+    },
+    {
+      "id": "core-okta-target-1",
+      "source": "euroid-core",
+      "target": "okta-target-1",
+      "style": {
+        "stroke": "#8A94A3",
+        "strokeWidth": 1.5
+      },
+      "label": "Provisioning",
+      "data": {
+        "conditionsEnabled": true,
+        "conditionGroups": [
+          {
+            "id": "ecg-1",
+            "join": "AND",
+            "conditions": [
+              {
+                "id": "ec-1",
+                "field": "employmentType",
+                "operator": "in",
+                "value": [
+                  "Full-Time",
+                  "Contractor"
+                ]
+              },
+              {
+                "id": "ec-2",
+                "field": "department",
+                "operator": "not_equals",
+                "value": "Finance"
+              }
+            ]
+          },
+          {
+            "id": "ecg-2",
+            "join": "OR",
+            "conditions": [
+              {
+                "id": "ec-3",
+                "field": "jobTitle",
+                "operator": "is_not_empty",
+                "value": ""
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "core-entra",
+      "source": "euroid-core",
+      "target": "entra-target",
+      "style": {
+        "stroke": "#8A94A3",
+        "strokeWidth": 1.5
+      },
+      "label": "Identity",
+      "data": {
+        "conditionsEnabled": true,
+        "conditionGroups": [
+          {
+            "id": "ecg-1795334400000",
+            "join": "AND",
+            "conditions": [
+              {
+                "id": "ec-1795334400000",
+                "field": "status",
+                "operator": "equals",
+                "value": "Active"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  },
+  "connectorConfigs": {}
+}
